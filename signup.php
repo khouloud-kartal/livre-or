@@ -25,34 +25,32 @@ if(isset($_POST['submit'])) {
     
     //if the login doesn't exist
     if($num <= 0) {
-        //Configurate the input length and characters
         if (strlen($login)>=5 &&  strlen($password)>=5 && !preg_match("[\W]",$_POST['login'])){
-                //if the repeated password is the same as the first one 
-                if($password == $passwordConfirm) {
-            
-                    // Password Hashing is used here to crypt the password in the database
-                    $hash = password_hash($password, PASSWORD_DEFAULT);
-                    
-                    //insert the inputs in the database
-                    $sql = "INSERT INTO `utilisateurs` ( `login`, `password`) VALUES ('$login','$hash')";
-            
-                    $result = mysqli_query($db, $sql);
-                    //if all conditions are true
-                    if ($result) {
-                        $showAlert = true;
-                        header('Location: login.php');
-                        session_destroy();
-                    }
-                } 
-                else { 
-                    $showError = "Passwords do not match"; 
-                }  
+            //if the repeated password is the same as the first one 
+            if($password == $passwordConfirm) {
+        
+                // Password Hashing is used here to crypt the password in the database
+                $hash = password_hash($password, PASSWORD_DEFAULT);
+                
+                //insert the inputs in the database
+                $sql = "INSERT INTO `utilisateurs` ( `login`, `password`) VALUES ('$login','$hash')";
+        
+                $result = mysqli_query($db, $sql);
+                //if all conditions are true
+                if ($result) {
+                    $showAlert = true;
+                    header('Location: login.php');
+                    session_destroy();
+                }
+            } 
+            else { 
+                $showError = "Passwords do not match"; 
+            }  
         }elseif (strlen($login)<5 || strlen($password)<5) {
-            $error = "The password or The username are too short";
+            $error = "Minimum five characteres";
         }elseif(preg_match("[\W]",$_POST['login'])){
             $error = "The special characters are not allowed";
         }
-
     }else{
       $error="Username already exist"; 
    }  
@@ -65,6 +63,7 @@ if(isset($_POST['submit'])) {
         <link rel="stylesheet" href="style.css" media="screen" type="text/css">
         <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <title>Sign Up</title>
     </head>
     <body>
         <?php include 'header.php'?>
@@ -91,7 +90,7 @@ if(isset($_POST['submit'])) {
                         
                     </div>
 
-                    <button type="submit" id="submit" class="draw" name="submit" value="Sign Up" class="form">Sign Up</button>
+                    <button type="submit" id="submit" class="b1" name="submit" value="Sign Up">Sign Up</button>
                     <h3><?php
                         // display the errors
                         if($showAlert) {
@@ -100,6 +99,9 @@ if(isset($_POST['submit'])) {
             
                         if($showError) {
                         echo '<strong>Error!</strong>'. $showError; 
+                        }
+                        if($error){
+                            echo '<strong>Error!</strong>'. $error;
                         }
                     ?></h3>
                 </form>

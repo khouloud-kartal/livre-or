@@ -8,7 +8,7 @@ if(isset($_POST['submit'])) {
     // Include file which makes the Database Connection.
     include 'config.php';   
     $comment = $_POST["comment"];
-    var_dump($_SESSION);
+    
     if ($comment == null) { 
         $error='Write a comment';
         
@@ -35,6 +35,7 @@ if(isset($_POST['submit'])) {
         <link rel="stylesheet" href="style.css" media="screen" type="text/css">
         <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <title>Comments</title>
     </head>
     <body>
         <?php include 'header.php'?>
@@ -42,11 +43,11 @@ if(isset($_POST['submit'])) {
             <section class="comments">
                 <form action="comments.php" method="POST">
                     <textarea name="comment" placeholder="Write a comment..."></textarea>
-                    <button name="submit">Comment</button>
-                    <?PHP if ($error){
+                    <button name="submit" class="b1">Comment</button>
+                    <h3><?PHP if ($error){
                         echo $error;
                     }
-                    ?>
+                    ?></h3>
                 </form>
             </section>
         </main>

@@ -3,17 +3,12 @@ session_start();
 require('config.php');
 
 $error = '';
-$msg= false;
+$msg= '';
 // Set variables to use in the following request.
 if(isset($_POST['edit'])) {
 $login = $_SESSION['login'];
 $loginNew = $_POST['login'];
 
-$prenom = $_SESSION['prenom'];
-$prenomNew = $_POST['prenom'];
-
-$nom = $_SESSION['nom'];
-$nomNew = $_POST['nom'];
 
 $passwordTrue = $_SESSION['password'];
 $password = $_POST['currentpassword'];
@@ -27,15 +22,22 @@ $sql = "select * from utilisateurs where login = '$login'";
 $rs = mysqli_query($db,$sql);
 $numRows = mysqli_num_rows($rs);
 
-
+// if the password is correct
 if(password_verify($password,$passwordTrue)){
     
+    //if we put nothing in the input of changing the password
     if (!empty($passwordNew)){
 
-        if(strlen($passwordNew) <= 5){    // If the password's lenght is less or equal to 5
+        // If the password's lengh is less or equal to 5
+        if(strlen($passwordNew) < 5){
 
-            $error = "Short Password";
+            $error = "The password must have at least 5 characteres";
+        
+        }elseif(preg_match("[\W]", $passwordNew)){    // If there is non-alphanumeric characters in the login
 
+            $error = "Special caracteres are not allowed";
+
+        //If the input of the password confirmation is empty
         }elseif (empty($passwordNewConfirm)){
 
             $error = "Confirm The New Password";
@@ -52,19 +54,16 @@ if(password_verify($password,$passwordTrue)){
             $sqlPass = "update utilisateurs set password = '$hash' where login = '$login'";
             $rs = mysqli_query($db,$sqlPass);
             $_SESSION['password'] = $hash;
-            $msg = true;
+            $msg = '<strong>Success</strong> Your password has been changed successfully';
         }
 
     }
     
     if ($login != $loginNew){
-        if($numRows != 1){
 
-            $error = "Login already exists";
+        if(strlen($loginNew) < 5){    // If the login's lenght is less or equal to 5
 
-        }elseif(strlen($login) <= 5){    // If the login's lenght is less or equal to 5
-
-            $error = "Login too short";
+            $error = "The login must have at least 5 characteres";
 
         }elseif(preg_match("[\W]", $loginNew)){    // If there is non-alphanumeric characters in the login
 
@@ -75,7 +74,7 @@ if(password_verify($password,$passwordTrue)){
             $sqlLog = "update utilisateurs set login = '$loginNew' where login = '$login'";
             $rs = mysqli_query($db,$sqlLog);
             $_SESSION['login'] = $loginNew;
-            $msg = true;
+            $msg = '<strong>Success</strong> Your login has been changed successfully';
         }
 
     }
@@ -99,6 +98,7 @@ if(password_verify($password,$passwordTrue)){
         <link rel="stylesheet" href="style.css" media="screen" type="text/css">
         <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <title>Profile</title>
     </head>
     <body>
         <?php include 'header.php'?>
@@ -120,23 +120,25 @@ if(password_verify($password,$passwordTrue)){
 
                     <div class="group">
                         <label>New Password</label>     
-                        <input type="password" name="newpassword" required>
+                        <input type="password" name="newpassword" >
                         
                     </div>
 
                     <div class="group">
                         <label>Confirm Password</label>      
-                        <input type="password" name="passwordConfirm" required>
+                        <input type="password" name="passwordconfirm" >
                         
                     </div>
 
-                    <button type="submit" id="submit" class="draw" name="submit" value="Sign Up" class="form">Sign Up</button>
+                    <button type="submit" id="submit" class="b1" name="edit" value="Edit" >Edit</button>
                     <h3><?php
                         if($error){
                             echo $error;
                         }
+                    ?></h3>
+                    <h3><?php 
                         if($msg){
-                            echo 'Your account had been changed succssefully.';
+                            echo $msg;
                         }
                     ?></h3>
                 </form>
