@@ -47,7 +47,7 @@ if(isset($_POST['submit'])) {
                 $showError = "Passwords do not match"; 
             }  
         }elseif (strlen($login)<5 || strlen($password)<5) {
-            $error = "Minimum five characteres";
+            $error = "Minimum five letters";
         }elseif(preg_match("[\W]",$_POST['login'])){
             $error = "The special characters are not allowed";
         }

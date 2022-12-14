@@ -20,9 +20,12 @@ if(isset($_POST['submit'])) {
         $date = date('Y-m-d H:i:s');
         //strip_tags supprime les balises HTML et PHP d'une chaîne (par sécurité)
         $comment2 = strip_tags(trim($comment));
-        //nl2br insère un retour à la ligne HTML à chaque nouvelle ligne du textarea
-        $comment3 = nl2br($comment2);
-        $sql = "INSERT INTO `commentaires` (`date`, `id_utilisateur`, `commentaire`) VALUES ('$date', '$id', '$comment3')";
+        
+		$comment3 = htmlspecialchars($comment2, ENT_QUOTES);
+		//nl2br insère un retour à la ligne HTML à chaque nouvelle ligne du textarea
+        $comment4 = nl2br($comment3);
+		
+        $sql = "INSERT INTO `commentaires` (`date`, `id_utilisateur`, `commentaire`) VALUES ('$date', '$id', '$comment4')";
         $result = mysqli_query($db, $sql);
         header('Location:goldenbook.php');
     }
